@@ -130,7 +130,7 @@ namespace BrewLib.Audio
                 updatePitch();
             }
         }
-            
+
         private float pan = 0;
         public float Pan
         {
@@ -185,7 +185,7 @@ namespace BrewLib.Audio
         internal void UpdateVolume()
         {
             if (channel == 0) return;
-            Bass.ChannelSetAttribute(channel, ChannelAttribute.Volume, SoundUtil.FromLinearVolume(volume * Manager.Volume));
+            Bass.ChannelSetAttribute(channel, ChannelAttribute.Volume, volume * SoundUtil.FromLinearVolume(Manager.Volume));
         }
 
         private void updateTimeFactor()
