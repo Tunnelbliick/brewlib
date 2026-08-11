@@ -34,6 +34,8 @@ namespace BrewLib.Audio
             Bass.ChannelSetAttribute(stream, ChannelAttribute.TempoUseQuickAlgorithm, 1);
             Bass.ChannelSetAttribute(stream, ChannelAttribute.TempoOverlapMilliseconds, 4);
             Bass.ChannelSetAttribute(stream, ChannelAttribute.TempoSequenceMilliseconds, 30);
+            // BASS_ATTRIB_TEMPO_OPTION_OLDPOS https://www.un4seen.com/forum/?topic=20482.msg145282#msg145282
+            Bass.ChannelSetAttribute(stream, (ChannelAttribute)0x10017, 1);
 
             Channel = stream;
         }

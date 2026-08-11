@@ -27,6 +27,13 @@ namespace BrewLib.Audio
         public AudioManager(IntPtr windowHandle)
         {
             Trace.WriteLine($"Initializing audio - Bass {Bass.Version}");
+
+            Bass.DeviceBufferLength = 10;
+            Bass.UpdatePeriod = 5;
+            Bass.PlaybackBufferLength = 100;
+            Bass.DeviceNonStop = true;
+            Bass.VistaTruePlayPosition = false;
+
             for (var i = 0; i < Bass.DeviceCount; i++)
             {
                 var device = Bass.GetDeviceInfo(i);
@@ -56,10 +63,6 @@ namespace BrewLib.Audio
                 if (!initialized)
                     throw new Exception($"Failed to initialize audio - {Bass.LastError}");
             }
-
-            Bass.PlaybackBufferLength = 100;
-            Bass.NetBufferLength = 500;
-            Bass.UpdatePeriod = 10;
         }
 
         public void Update()
