@@ -22,6 +22,7 @@ namespace BrewLib.Time
 
                 timeSource.Playing = value && timeSource.Seek(clock.Current);
                 clock.Playing = value;
+                errorWindow.Clear();
             }
         }
 
@@ -32,6 +33,7 @@ namespace BrewLib.Time
             {
                 timeSource.TimeFactor = value;
                 clock.TimeFactor = value;
+                errorWindow.Clear();
             }
         }
 
