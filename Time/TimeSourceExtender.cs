@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Brewlib.Util;
 
 namespace BrewLib.Time
 {
@@ -7,7 +7,10 @@ namespace BrewLib.Time
         private readonly Clock clock = new Clock();
         private readonly TimeSource timeSource;
 
-        public double Current => timeSource.Playing ? timeSource.Current : clock.Current;
+        private readonly ValueWindow<double> errorWindow = new(180);
+        private double errorAdjustment;
+
+        public double Current => clock.Current + errorAdjustment;
 
         public bool Playing
         {
@@ -16,7 +19,7 @@ namespace BrewLib.Time
             {
                 if (clock.Playing == value)
                     return;
-                
+
                 timeSource.Playing = value && timeSource.Seek(clock.Current);
                 clock.Playing = value;
             }
@@ -42,15 +45,20 @@ namespace BrewLib.Time
             if (!timeSource.Seek(time))
                 timeSource.Playing = false;
 
+            errorWindow.Clear();
+            errorAdjustment = 0;
             return clock.Seek(time);
         }
 
         public void Update()
         {
-            timeSource.Playing = clock.Playing && (timeSource.Playing || timeSource.Seek(clock.Current));
+            var playing = timeSource.Playing = clock.Playing && (timeSource.Playing || timeSource.Seek(clock.Current));
+            if (!playing)
+                return;
 
-            if (timeSource.Playing && Math.Abs(clock.Current - timeSource.Current) > .005f)
-                clock.Seek(timeSource.Current);
+            var error = clock.Current - timeSource.Current;
+            errorWindow.Add(error);
+            errorAdjustment = errorAdjustment * .9 - errorWindow.GetAverage() * .1;
         }
     }
 }
